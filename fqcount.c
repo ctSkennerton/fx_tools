@@ -11,9 +11,33 @@ void help()
     fprintf(stderr, "Usage:   fqcount <in.fq>...\n\n");
 }
 
-int main(int argc, char * argv[])
+void process(const char * file, int printFile)
 {
 	gzFile fp;
+    char buffer[BUFFER_LENGTH]; // 16kb buffer
+    fp = strcmp(file, "-")? gzopen(file, "r") : gzdopen(fileno(stdin), "r");
+    int count, l, c;
+    count = 0;
+    while ((l = gzread(fp, buffer, BUFFER_LENGTH)) > 0) {
+        c = 0;
+        while(c < l) {
+            if(buffer[c] == '\n') {
+                count += 1;   
+            }
+            c++;
+        }
+    }
+    if(printFile)
+    {
+        printf("%s\t%d\n", file, count/4);
+    } else {
+        printf("%d\n", count/4);
+    }
+    gzclose(fp);
+}
+
+int main(int argc, char * argv[])
+{
     int print_file = 0;
     int c;
     while ((c = getopt (argc, argv, "hH")) != -1)
@@ -25,38 +49,21 @@ int main(int argc, char * argv[])
         }
     }
 
-	if (optind + 1 > argc) {
-        help();
-		return 1;
-	}
     if(argc - optind > 1)
     {
         // more than one input file, print the file name
         print_file = 1;
     }
-    int i;
-    char buffer[BUFFER_LENGTH]; // 16kb buffer
-    for(i = optind; i < argc; ++i)
+	if (optind >= argc) {
+        process("-", print_file);
+	}
+    else
     {
-        fp = strcmp(argv[i], "-")? gzopen(argv[i], "r") : gzdopen(fileno(stdin), "r");
-        int count, l, c;
-        count = 0;
-        while ((l = gzread(fp, buffer, BUFFER_LENGTH)) > 0) {
-            c = 0;
-            while(c < l) {
-                if(buffer[c] == '\n') {
-                    count += 1;   
-                }
-                c++;
-            }
-        }
-        if(print_file)
+        int i;
+        for(i = optind; i < argc; ++i)
         {
-            printf("%s\t%d\n", argv[i], count/4);
-        } else {
-            printf("%d\n", count/4);
+            process(argv[i], print_file);
         }
-        gzclose(fp);
     }
 	return 0;
 }

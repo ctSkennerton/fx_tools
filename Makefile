@@ -1,6 +1,6 @@
 LDLIBS = -lz
 PREFIX = /usr/bin/
-progs := fxsummary fxuniq facount fqcount fxstats
+progs := fxsummary fxuniq facount fqcount fxstats fxfilter
 
 .PHONY: all install
 
@@ -18,3 +18,5 @@ facount: facount.c
 fqcount: fqcount.c
 
 fxstats: fxstats.c kseq.h 
+
+fxfilter: fxfilter.c kseq.h

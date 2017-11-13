@@ -10,7 +10,14 @@ KSEQ_INIT(gzFile, gzread)
 void help()
 {
     fprintf(stderr, "\n");
-    fprintf(stderr, "Usage:   fxfilter <in.fx>...\n\n");
+    fprintf(stderr, "Usage:   fxfilter [options] <in.fx>...\n");
+    fprintf(stderr, "Options:\n\n");
+    fprintf(stderr, "-%-10c%s\n", 'g', "the minimum GC fraction to keep the sequence. default: 0.0");
+    fprintf(stderr, "-%-10c%s\n", 'G', "the maximum GC fraction to keep the sequence. default: 1.0");
+    fprintf(stderr, "-%-10c%s\n", 'l', "the minimum length to keep the sequence. default: 1");
+    fprintf(stderr, "-%-10c%s %i\n", 'L', "the maximum length to keep the sequence. default:", INT_MAX);
+    fprintf(stderr, "-%-10c%s\n", 'h', "print this help message");
+    fprintf(stderr, "\n\n");
 }
 
 int compare (const void * a, const void * b)

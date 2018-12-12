@@ -7,16 +7,16 @@ progs := fxsummary fxuniq facount fqcount fxstats fxfilter
 all: $(progs)
 
 install: $(progs)
-	install -t $(PREFIX) $^	
+	install $^ $(PREFIX)	
 
-fxsummary: fxsummary.c kvec.h kseq.h
+fxsummary: fxsummary.c 
 
-fxuniq: fxuniq.c kseq.h khash.h
+fxuniq: fxuniq.c 
 
 facount: facount.c
 
 fqcount: fqcount.c
 
-fxstats: fxstats.c kseq.h 
+fxstats: fxstats.c 
 
-fxfilter: fxfilter.c kseq.h
+fxfilter: fxfilter.c 

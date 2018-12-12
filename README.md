@@ -15,4 +15,4 @@ Print tabular summary statistics on a whole file. The default columns
 are count, sum, min, max, mean, median, n50
 
 ## fxuniq
-remove records that have identical header names
+remove records that have identical header names or sequences

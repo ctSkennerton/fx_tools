@@ -35,36 +35,37 @@ void process(const char * file, int printFile)
 
     int l;
     unsigned long sum, count;
-    sum = count = 0;
+    int n50, mean, median, min, max;
+    n50 = mean = median = min = max = sum = count = 0;
     while ((l = kseq_read(seq)) >= 0) {
        sum += l;
        count += 1;
        kv_push(int, array, l);
     }
-
-    qsort(array.a, kv_size(array), sizeof(int), compare);
-    int j, k, n50, mean, median, min, max;
-    k = j = 0;
-    n50 = 0;
-    int n50_length = sum / 2;
-    while(j < kv_size(array)) {
-        k += kv_A(array, j);
-        if( k > n50_length) {
-            n50 = kv_A(array, j);
-            break;
+    if (count > 0) { 
+        int j, k;
+        qsort(array.a, kv_size(array), sizeof(int), compare);
+        k = j = 0;
+        n50 = 0;
+        int n50_length = sum / 2;
+        while(j < kv_size(array)) {
+            k += kv_A(array, j);
+            if( k > n50_length) {
+                n50 = kv_A(array, j);
+                break;
+            }
+            j++;
         }
-        j++;
-    }
-    mean = sum / count;
-    median = kv_A(array, kv_size(array) / 2 );
-    min = kv_A(array, 0);
-    max = kv_A(array, kv_size(array) - 1);
+        mean = sum / count;
+        median = kv_A(array, kv_size(array) / 2 );
+        min = kv_A(array, 0);
+        max = kv_A(array, kv_size(array) - 1);
+    } 
 
-    if(printFile)
-    {
-        printf("%s\t%d\t%lu\t%d\t%d\t%d\t%d\t%d\n", file, count, sum, min, max, mean, median, n50);
+    if(printFile) {
+        printf("%s\t%lu\t%lu\t%d\t%d\t%d\t%d\t%d\n", file, count, sum, min, max, mean, median, n50);
     } else {
-        printf("%d\t%lu\t%d\t%d\t%d\t%d\t%d\n", count, sum, min, max, mean, median, n50);
+        printf("%lu\t%lu\t%d\t%d\t%d\t%d\t%d\n", count, sum, min, max, mean, median, n50);
     }
     gzclose(fp);
     kseq_destroy(seq);
